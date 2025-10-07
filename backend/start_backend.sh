@@ -1,0 +1,26 @@
+#!/bin/bash
+
+echo "🚀 Starting ICPAC Booking System Backend..."
+echo ""
+echo "📍 Server will run on: http://localhost:8000/"
+echo ""
+echo "🌐 Available Browser Interfaces:"
+echo "┌─────────────────────────────────────────────────────────┐"
+echo "│ 🏠 API Info:        http://localhost:8000/             │"
+echo "│ 🔐 Django Admin:    http://localhost:8000/admin/       │"
+echo "│ 📝 Wagtail CMS:     http://localhost:8000/cms-admin/   │"
+echo "│ 🏢 Rooms API:       http://localhost:8000/api/rooms/   │"
+echo "│ 📅 Bookings API:    http://localhost:8000/api/bookings/│"
+echo "│ 👥 Auth API:        http://localhost:8000/api/auth/    │"
+echo "└─────────────────────────────────────────────────────────┘"
+echo ""
+echo "🔑 Admin Login Credentials:"
+echo "   Email: admin@icpac.net"
+echo "   Password: admin123"
+echo ""
+echo "⚡ Starting Django server..."
+echo "   Press Ctrl+C to stop the server"
+echo "─────────────────────────────────────────────────────────"
+echo ""
+
+python manage.py runserver 0.0.0.0:8000
