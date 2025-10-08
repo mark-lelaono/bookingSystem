@@ -1,5 +1,7 @@
-import React from 'react';
-import { Box, Typography, Card } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Typography, Card, Avatar, Menu, MenuItem, IconButton } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { useApp } from '../../context/AppContext';
 
 interface HeaderProps {
   roomsCount: number;
@@ -7,11 +9,54 @@ interface HeaderProps {
   availableRoomsCount: number;
 }
 
+// Helper function to generate avatar props
+const stringAvatar = (name: string) => {
+  const nameParts = name.split(' ');
+  const firstInitial = nameParts[0]?.[0]?.toUpperCase() || '';
+  const lastInitial = nameParts[1]?.[0]?.toUpperCase() || '';
+
+  return {
+    sx: {
+      bgcolor: '#10B981',
+      width: 40,
+      height: 40,
+      fontSize: '0.875rem',
+      fontWeight: 600,
+    },
+    children: `${firstInitial}${lastInitial}`,
+  };
+};
+
 const Header: React.FC<HeaderProps> = ({
   roomsCount,
   todayBookingsCount,
   availableRoomsCount,
 }) => {
+  const { user, logout } = useApp();
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleAvatarClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+    handleMenuClose();
+  };
+
+  // Get user's full name for avatar
+  const getUserDisplayName = () => {
+    if (!user) return 'User';
+    return `${user.first_name} ${user.last_name}`.trim() || user.username;
+  };
+
   return (
     <Box
       sx={{
@@ -57,7 +102,8 @@ const Header: React.FC<HeaderProps> = ({
         display: 'flex',
         gap: { xs: 1, sm: 1.5, md: 2 },
         justifyContent: { xs: 'center', md: 'flex-end' },
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
+        alignItems: 'center'
       }}>
         <Card sx={{
           px: { xs: 1.5, sm: 2, md: 2.5 },
@@ -76,15 +122,15 @@ const Header: React.FC<HeaderProps> = ({
           >
             {roomsCount}
           </Typography>
-          <Typography 
-            variant="caption" 
+          <Typography
+            variant="caption"
             color="#FFFFFF"
             sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}
           >
             Rooms
           </Typography>
         </Card>
-        
+
         <Card sx={{
           px: { xs: 1.5, sm: 2, md: 2.5 },
           py: { xs: 1, sm: 1.5 },
@@ -102,15 +148,15 @@ const Header: React.FC<HeaderProps> = ({
           >
             {todayBookingsCount}
           </Typography>
-          <Typography 
-            variant="caption" 
+          <Typography
+            variant="caption"
             color="#FFFFFF"
             sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}
           >
             Today
           </Typography>
         </Card>
-        
+
         <Card sx={{
           px: { xs: 1.5, sm: 2, md: 2.5 },
           py: { xs: 1, sm: 1.5 },
@@ -128,18 +174,67 @@ const Header: React.FC<HeaderProps> = ({
           >
             {availableRoomsCount}
           </Typography>
-          <Typography 
-            variant="caption" 
+          <Typography
+            variant="caption"
             color="#FFFFFF"
             sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}
           >
             Available
           </Typography>
         </Card>
+
+        {/* User Avatar with Dropdown */}
+        {user && (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <IconButton
+              onClick={handleAvatarClick}
+              sx={{
+                p: 0,
+                '&:hover': {
+                  bgcolor: 'rgba(255, 255, 255, 0.1)',
+                }
+              }}
+            >
+              <Avatar {...stringAvatar(getUserDisplayName())} />
+            </IconButton>
+
+            <Menu
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleMenuClose}
+              onClick={handleMenuClose}
+              transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+              PaperProps={{
+                sx: {
+                  bgcolor: '#FFFFFF',
+                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                  borderRadius: 2,
+                  minWidth: 120,
+                  mt: 1,
+                }
+              }}
+            >
+              <MenuItem
+                onClick={handleLogout}
+                sx={{
+                  color: '#DC2626',
+                  fontWeight: 500,
+                  fontSize: '0.875rem',
+                  py: 1.5,
+                  '&:hover': {
+                    bgcolor: '#FEF2F2',
+                  }
+                }}
+              >
+                Logout
+              </MenuItem>
+            </Menu>
+          </Box>
+        )}
       </Box>
     </Box>
   );
 };
 
 export default Header;
-

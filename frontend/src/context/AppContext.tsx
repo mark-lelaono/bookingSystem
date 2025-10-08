@@ -61,6 +61,8 @@ interface AppContextType {
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   loading: boolean;
+  pageLoading: boolean;
+  setPageLoading: React.Dispatch<React.SetStateAction<boolean>>;
   error: string | null;
   setError: React.Dispatch<React.SetStateAction<string | null>>;
 
@@ -100,6 +102,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
+  const [pageLoading, setPageLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // -------------------------
@@ -279,6 +282,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     user,
     setUser,
     loading,
+    pageLoading,
+    setPageLoading,
     error,
     setError,
     login,

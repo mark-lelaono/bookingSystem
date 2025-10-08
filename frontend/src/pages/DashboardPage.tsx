@@ -2,7 +2,6 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
-  Container,
   Typography,
   Button,
   Paper,
@@ -27,7 +26,7 @@ import {
   PieChart, Pie, Cell, LineChart, Line, AreaChart, Area
 } from 'recharts';
 import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, isWithinInterval } from 'date-fns';
-import { useApp } from '../context/AppContext';
+// import { useApp } from '../context/AppContext';
 import apiService from '../services/api';
 import { Room, Booking } from '../context/AppContext';
 

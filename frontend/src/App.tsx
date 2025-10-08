@@ -1,11 +1,12 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import { AppProvider, useApp } from './context/AppContext';
 import BookingBoard from './pages/BookingBoard';
 import DashboardPage from './pages/DashboardPage';
 import LoginPage from './pages/LoginPage';
 import ProcurementPage from './pages/ProcurementPage';
-import { ReactNode } from 'react';
+import PageLoadingSpinner from './components/common/PageLoadingSpinner';
+import { ReactNode, useEffect } from 'react';
 
 // Create MUI theme
 const theme = createTheme({
@@ -70,8 +71,27 @@ const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
 
 // Main App Content
 const AppContent: React.FC = () => {
+  const { pageLoading, setPageLoading } = useApp();
+  const location = useLocation();
+
+  useEffect(() => {
+    // Show loading spinner when location changes
+    setPageLoading(true);
+
+    // Hide spinner after a short delay to allow page to load
+    const timer = setTimeout(() => {
+      setPageLoading(false);
+    }, 800);
+
+    return () => {
+      clearTimeout(timer);
+      setPageLoading(false);
+    };
+  }, [location.pathname, setPageLoading]);
+
   return (
     <div className="App min-h-screen bg-gray-50 flex flex-col">
+      <PageLoadingSpinner open={pageLoading} />
       <main className="flex-1">
         <Routes>
           <Route
